@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Sans:wght@500&family=Inria+Sans:wght@300&display=swap" rel="stylesheet">
+    <link rel="icon" href="static/favicon.ico">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- CSS only -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-wEmeIV1mKuiNpC+IOBjI7aAzPcEZeedi5yW5f2yOq55WWLwNGmvvx4Um1vskeMj0" crossorigin="anonymous">
+    <link rel="stylesheet" href="{{url_for('static',filename='index.css')}}">
+    <!-- JavaScript Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-p34f1UUtsS3wqzfto5wAAmdvj+osOnFyQFpp4Ua3gs/ZVWx6oOypYoCJhGGScy+8" crossorigin="anonymous"></script>
+    <title>Password analyzer</title>
+</head>
+
+<body>
+    <section id="title">
+
+        <!-- Nav Bar -->
+        <div class="container-fluid">
+            <nav class="navbar navbar-expand-sm navbar-dark">
+                <a class="navbar-brand" href="#"><i class = "fa fa-key"></i> Password analyzer</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">
+                  <span class="navbar-toggler-icon"></span>
+            </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav ml-auto">
+                        <li class="navbar-item"><a class="nav-link" href="#title">Home</a></li>
+                        <li class="navbar-item"><a class="nav-link" href="#footer">Contact</a></li>
+                        <li class="navbar-item"><a class="nav-link" href="#result">Result</a></li>
+                        <li class="navbar-item"><a class="nav-link" href="#download">Download</a></li>
+                    </ul>
+                </div>
+            </nav>
+            <form method="POST" action="/">
+                <div class="row title-margin">
+                    <div class="col-md-12">
+                        <h2>Password strength test</h2>
+                        <p class="title-text">
+                            This strength tester runs on your local machine and does not send your password over the network.
+                        </p>
+                        <div class="input-group mt-3">
+                            <input type="search" class="form-control" placeholder="Enter your password" name="pwd" value="{{request.form.pwd}}">
+                        </div>
+                        <div class="progress mt-3 mb-3" style="height:20px">
+                            {% if final_score is lt 30 %}
+                            <div id="progressBar" class="big-font progress-bar progress-bar-striped progress-bar-animated bg-danger" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: {{final_score}}%">
+                                {{final_score}}
+                            </div>
+                            {% elif final_score is lt 50 %}
+                            <div id="progressBar" class="big-font progress-bar progress-bar-striped progress-bar-animated bg-warning" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: {{final_score}}%">
+                                {{final_score}}
+                            </div>
+                            {% elif final_score is lt 70 %}
+                            <div id="progressBar" class="big-font progress-bar progress-bar-striped progress-bar-animated bg-primary" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: {{final_score}}%">
+                                {{final_score}}
+                            </div>
+                            {% elif final_score is lt 90 %}
+                            <div id="progressBar" class="progress-bar progress-bar-striped progress-bar-animated bg-info big-font" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: {{final_score}}%">
+                                {{final_score}}
+                            </div>
+                            {% else %}
+                            <div id="progressBar" class="big-font progress-bar progress-bar-striped progress-bar-animated bg-success" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: {{final_score}}%">
+                                {{final_score}}
+                            </div>
+                            {% endif %}
+                        </div>
+                        <div class="button-group mt-5 mb-3">
+                            <button type="submit" name="submit" class="btn btn-outline-warning btn-lg">Check</button>
+                        </div>
+                        <br> {% if final_score is lt 30 %}
+                        <div class="alert alert-danger alert-width" role="alert">
+                            <i class="fa fa-battery-empty"></i> Very Weak
+                        </div>
+                        {% elif final_score is lt 50 %}
+                        <div class="alert alert-warning alert-width" role="alert">
+                            <i class="fa fa-battery-quarter"></i> Weak
+                        </div>
+                        {% elif final_score is lt 70 %}
+                        <div class="alert alert-primary alert-width" role="alert">
+                            <i class="fa fa-battery-half"></i> OK
+                        </div>
+                        {% elif final_score is lt 90 %}
+                        <div class="alert alert-info alert-width" role="alert">
+                            <i class="fa fa-battery-three-quarters"></i> Strong
+                        </div>
+                        {% else %}
+                        <div class="alert alert-success alert-width" role="alert">
+                            <i class="fa fa-battery-full"></i> Very Strong
+                        </div>
+                        {% endif %}
+
+                    </div>
+                </div>
+            </form>
+
+
+    </section>
+
+    <!-- Table section -->
+    <section id="result">
+        <div class="container container-heading">
+            <h2>Additions and Deductions</h2>
+            <button type="button" class="btn btn-dark btn-lg btn-space"><i class="fa fa-plus-circle"></i> Additions</button>
+            <button type="button" class="btn btn-warning btn-lg"><i class="fa fa-minus-circle"></i> Deductions</button>
+        </div>
+        <div class="row result-tb-margin">
+
+            <div class="col-md-8">
+
+                <table class="table table-hover">
+                    <thead>
+                        <tr class="table-success">
+                            <th scope="col">Additions</th>
+                            <th scope="col">Score</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        <tr>
+                            {% if flags.length == 0 %}
+                            <td class="table-danger">Number of Characters</td>
+                            <td class="table-danger">{{results.length_score}}</td>
+                            {% elif flags.length == 1 %}
+                            <td class="table-warning">Number of Characters</td>
+                            <td class="table-warning">
+                                {{results.length_score}}
+                            </td>
+                            {% elif flags.length == 2 %}
+                            <td class="table-info">Number of Characters</td>
+                            <td class="table-info">
+                                {{results.length_score}}
+                            </td>
+                            {% else %}
+                            <td class="table-success">Number of Characters</td>
+                            <td class="table-success">
+                                {{results.length_score}}
+                            </td>
+                            {% endif %}
+                        </tr>
+                        <tr>
+                            {% if flags.upper_case == 0 %}
+                            <td class="table-danger">Uppercase Letters</td>
+                            <td class="table-danger">{{results.lower_upper_case_score}}</td>
+                            {% elif flags.upper_case == 1 %}
+                            <td class="table-warning">Uppercase Letters</td>
+                            <td class="table-warning">{{results.lower_upper_case_score}}</td>
+                            {% elif flags.upper_case == 2 %}
+                            <td class="table-info">Uppercase Letters</td>
+                            <td class="table-info">{{results.lower_upper_case_score}}</td>
+                            {% else %}
+                            <td class="table-success">Uppercase Letters</td>
+                            <td class="table-success">{{results.lower_upper_case_score}}</td>
+                            {% endif %}
+                        </tr>
+                        <tr>
+                            {% if flags.lower_case == 0 %}
+                            <td class="table-danger">Lowercase Letters</td>
+                            <td class="table-danger">{{results.lower_upper_case_score}}</td>
+                            {% elif flags.lower_case == 1 %}
+                            <td class="table-warning">Lowercase Letters</td>
+                            <td class="table-warning">{{results.lower_upper_case_score}}</td>
+                            {% elif flags.lower_case == 2 %}
+                            <td class="table-info">Lowercase Letters</td>
+                            <td class="table-info">{{results.lower_upper_case_score}}</td>
+                            {% else %}
+                            <td class="table-success">Lowercase Letters</td>
+                            <td class="table-success">{{results.lower_upper_case_score}}</td>
+                            {% endif %}
+                        </tr>
+                        <tr>
+                            {% if flags.digits == 0 %}
+                            <td class="table-danger">Numbers</td>
+                            <td class="table-danger">{{results.digits_score}}</td>
+                            {% elif flags.digits == 1 %}
+                            <td class="table-warning">Numbers</td>
+                            <td class="table-warning">{{results.digits_score}}</td>
+                            {% elif flags.digits == 2 %}
+                            <td class="table-info">Numbers</td>
+                            <td class="table-info">{{results.digits_score}}</td>
+                            {% else %}
+                            <td class="table-success">Numbers</td>
+                            <td class="table-success">{{results.digits_score}}</td>
+                            {% endif %}
+                        </tr>
+                        <tr>
+                            {% if flags.special_chars == 0 %}
+                            <td class="table-danger">Symbols</td>
+                            <td class="table-danger">{{results.special_score}}</td>
+                            {% elif flags.special_chars == 1 %}
+                            <td class="table-warning">Symbols</td>
+                            <td class="table-warning">{{results.special_score}}</td>
+                            {% elif flags.special_chars == 2 %}
+                            <td class="table-info">Symbols</td>
+                            <td class="table-info">{{results.special_score}}</td>
+                            {% else %}
+                            <td class="table-success">Symbols</td>
+                            <td class="table-success">{{results.special_score}}</td>
+                            {% endif %}
+                        </tr>
+                        <tr>
+                            {% if flags.middle_num_symbol == 0 %}
+                            <td class="table-danger">Middle numbers or Symbols</td>
+                            <td class="table-danger">{{results.middle_score}}</td>
+                            {% elif flags.middle_num_symbol == 1 %}
+                            <td class="table-warning">Middle numbers or Symbols</td>
+                            <td class="table-warning">{{results.middle_score}}</td>
+                            {% elif flags.middle_num_symbol == 2 %}
+                            <td class="table-info">Middle numbers or symbols</td>
+                            <td class="table-info">{{results.middle_score}}</td>
+                            {% else %}
+                            <td class="table-success">Middle numbers or symbols</td>
+                            <td class="table-success">{{results.middle_score}}</td>
+                            {% endif %}
+                        </tr>
+                        <tr>
+                            {% if flags.extra == 0 %}
+                            <td class="table-danger">Requirements</td>
+                            <td class="table-danger">{{results.extra_score}}</td>
+                            {% elif flags.extra == 1 %}
+                            <td class="table-warning">Requirements</td>
+                            <td class="table-warning">{{results.extra_score}}</td>
+                            {% elif flags.extra == 2 %}
+                            <td class="table-info">Requirements</td>
+                            <td class="table-info">{{results.extra_score}}</td>
+                            {% else %}
+                            <td class="table-success">Requirements</td>
+                            <td class="table-success">{{results.extra_score}}</td>
+                            {% endif %}
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-md-4 small-hide">
+                <button type="button" class="btn btn-group-lg rounded-pill btn-danger big-font-li" disabled>Password Requirements</button>
+                <p class='text-muted'>
+                    <ul class="list-group">
+                        <li class="list-group-item list-group-item-warning big-font-li">Must be at least 8 characters long</li>
+                        <li class="list-group-item list-group-item-info big-font-li">Must have at least 1 capital letter, 1 lower case letter, and 1 number or punctuation, but no spaces</li>
+                        <li class="list-group-item list-group-item-danger big-font-li">Cannot be based on your name, netid, or on words found in a dictionary</li>
+                        <li class="list-group-item list-group-item-success big-font-li">Cannot be based on simple repeating patterns</li>
+                    </ul>
+                </p>
+
+            </div>
+
+            <div class="row result-tb-margin">
+
+                <div class="col-md-8">
+
+                    <table class="table table-hover">
+                        <thead>
+                            <tr class="table-success">
+                                <th scope="col">Deductions</th>
+                                <th scope="col">Score</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                {% if flags.letters_only == 0 %}
+                                <td class="table-danger">Letters Only</td>
+                                <td class="table-danger">{{results.letters_only_score}}</td>
+                                {% elif flags.letters_only == 1 %}
+                                <td class="table-warning">Letters Only</td>
+                                <td class="table-warning">{{results.letters_only_score}}</td>
+                                {% elif flags.letters_only == 2%}
+                                <td class="table-info">Letters Only</td>
+                                <td class="table-info">{{results.letters_only_score}}</td>
+                                {% else %}
+                                <td class="table success">Letters Only</td>
+                                <td class="table-success">{{results.letters_only_score}}</td>
+                                {% endif %}
+                            </tr>
+                            <tr>
+                                {% if flags.numbers_only == 0 %}
+                                <td class="table-danger">Numbers Only</td>
+                                <td class="table-danger">{{results.numbers_only_score}}</td>
+                                {% elif flags.numbers_only == 1 %}
+                                <td class="table-warning">Numbers Only</td>
+                                <td class="table-warning">{{results.numbers_only_score}}</td>
+                                {% elif flags.numbers_only == 2 %}
+                                <td class="table-info">Numbers Only</td>
+                                <td class="table-info">{{results.numbers_only_score}}</td>
+                                {% else %}
+                                <td class="table-success">Numbers Only</td>
+                                <td class="table-success">{{results.numbers_only_score}}</td>
+                                {% endif %}
+                            </tr>
+                            <tr>
+                                {% if flags.repeating_chars == 0 %}
+                                <td class="table-danger">Repeat Characters(case insensitive)</td>
+                                <td class="table-danger">{{results.repeating_chars_score}}</td>
+                                {% elif flags.repeating_chars == 1 %}
+                                <td class="table-warning">Repeat Characters(case insensitive)</td>
+                                <td class="table-warning">{{results.repeating_chars_score}}</td>
+                                {% elif flags.repeating_chars == 2 %}
+                                <td class="table-info">Repeat Characters(case insensitive)</td>
+                                <td class="table-info">{{results.repeating_chars_score}}</td>
+                                {% else %}
+                                <td class="table-success">Repeat Characters(case insensitive)</td>
+                                <td class="table-success">{{results.repeating_chars_score}}</td>
+                                {% endif %}
+                            </tr>
+                            <tr>
+                                {% if flags.consecutive_upper_case == 0 %}
+                                <td class="table-danger">Consecutive Uppercase letters</td>
+                                <td class="table-danger">{{results.consecutive_case_score}}</td>
+                                {% elif flags.consecutive_upper_case == 1 %}
+                                <td class="table-warning">Consecutive Uppercase letters</td>
+                                <td class="table-warning">{{results.consecutive_case_score}}</td>
+                                {% elif flags.consecutive_upper_case == 2 %}
+                                <td class="table-info">Consecutive Uppercase letters</td>
+                                <td class="table-info">{{results.consecutive_case_score}}</td>
+                                {% else %}
+                                <td class="table-success">Consecutive Uppercase letters</td>
+                                <td class="table-success">{{results.consecutive_case_score}}</td>
+                                {% endif %}
+                            </tr>
+                            <tr>
+                                {% if flags.consecutive_lower_case == 0 %}
+                                <td class="table-danger">Consecutive lowercase letters</td>
+                                <td class="table-danger">{{results.consecutive_case_score}}</td>
+                                {% elif flags.consecutive_lower_case == 1 %}
+                                <td class="table-warning">Consecutive lowercase letters</td>
+                                <td class="table-warning">{{results.consecutive_case_score}}</td>
+                                {% elif flags.consecutive_lower_Case == 2 %}
+                                <td class="table-info">Consecutive lowercase letters</td>
+                                <td class="table-info">{{results.consecutive_case_score}}</td>
+                                {% else %}
+                                <td class="table-success">Consecutive lowercase letters</td>
+                                <td class="table-success">{{results.consecutive_case_score}}</td>
+                                {% endif %}
+                            </tr>
+                            <tr>
+                                {% if flags.consecutive_digits == 0 %}
+                                <td class="table-danger">Consecutive numbers</td>
+                                <td class="table-danger">{{results.consecutive_case_score}}</td>
+                                {% elif flags.consecutive_digits == 1 %}
+                                <td class="table-warning">Consecutive numbers</td>
+                                <td class="table-warning">{{results.consecutive_case_score}}</td>
+                                {% elif flags.consecutive_digits == 2 %}
+                                <td class="table-info">Consecutive numbers</td>
+                                <td class="table-info">{{results.consecutive_case_score}}</td>
+                                {% else %}
+                                <td class="table-success">Consecutive numbers</td>
+                                <td class="table-success">{{results.consecutive_case_score}}</td>
+                                {% endif %}
+                            </tr>
+                            <tr>
+                                {% if flags.sequential_letters == 0 %}
+                                <td class="table-danger">Sequential letters</td>
+                                <td class="table-danger">{{results.sequential_letters_score}}</td>
+                                {% elif flags.sequential_letters == 1 %}
+                                <td class="table-warning">Sequential letters</td>
+                                <td class="table-warning">{{results.sequential_letters_score}}</td>
+                                {% elif flags.sequential_letters == 2 %}
+                                <td class="table-info">Sequential letters</td>
+                                <td class="table-info">{{results.sequential_letters_score}}</td>
+                                {% else %}
+                                <td class="table-success">Sequential letters</td>
+                                <td class="table-success">{{results.sequential_letters_score}}</td>
+                                {% endif %}
+                            </tr>
+                            <tr>
+                                {% if flags.sequential_nums == 0 %}
+                                <td class="table-danger">Sequential numbers</td>
+                                <td class="table-danger">{{results.sequential_numbers_score}}</td>
+                                {% elif flags.sequential_nums == 1 %}
+                                <td class="table-warning">Sequential numbers</td>
+                                <td class="table-warning">{{results.sequential_numbers_score}}</td>
+                                {% elif flags.sequential_nums == 2 %}
+                                <td class="table-info">Sequential numbers</td>
+                                <td class="table-info">{{results.sequential_numbers_score}}</td>
+                                {% else %}
+                                <td class="table-info">Sequential numbers</td>
+                                <td class="table-info">{{results.sequential_numbers_score}}</td>
+                                {% endif %}
+                            </tr>
+                            <tr>
+                                {% if flags.dictionary_word == 0 %}
+                                <td class="table-danger">Dictionary words</td>
+                                <td class="table-danger">{{results.dictionary_words_score}}</td>
+                                {% elif flags.dictionary_word == 1 %}
+                                <td class="table-warning">Dictionary words</td>
+                                <td class="table-warning">{{results.dictionary_words_score}}</td>
+                                {% elif flags.dictionary_word == 2 %}
+                                <td class="table-info">Dictionary words</td>
+                                <td class="table-info">{{results.dictionary_words_score}}</td>
+                                {% else %}
+                                <td class="table-success">Dictionary words</td>
+                                <td class="table-success">{{results.dictionary_words_score}}</td>
+                                {% endif %}
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-md-4 small-hide">
+                    <button type="button" class="btn btn-group-lg rounded-pill btn-danger big-font-li" disabled>Legend</button>
+                    <p class='text-muted'>
+                        <ul class="list-group">
+                            <li class="list-group-item list-group-item-success big-font-li"><strong>Exceptional </strong>Exceeds minimum standards.Additional bonuses are applied.</li>
+                            <li class="list-group-item list-group-item-info big-font-li"><strong>Sufficient </strong>Meets minimum standards. Additional bonuses are applied.</li>
+                            <li class="list-group-item list-group-item-warning big-font-li"><strong>Warning </strong>Advisory against employing bad practices. Overall score is reduced.</li>
+                            <li class="list-group-item list-group-item-danger big-font-li"><strong>Failure </strong>Does not meet the minimum standards. Overall score is reduced.</li>
+                        </ul>
+                    </p>
+
+                </div>
+            </div>
+    </section>
+
+
+    <!--Presentation-->
+    <section id="ppt">
+        <h2>Presentation</h2>
+        <div class="container">
+            <iframe src="https://onedrive.live.com/embed?cid=8D4B2DC24C665B1E&amp;resid=8D4B2DC24C665B1E%214200&amp;authkey=AM34KjOHaBSwZT0&amp;em=2&amp;wdAr=1.7777777777777777" width="100%" height="500px" frameborder="0">This is an embedded <a target="_blank" href="https://office.com">Microsoft Office</a> presentation, powered by <a target="_blank" href="https://office.com/webapps">Office</a>.</iframe>
+        </div>
+        <!-- Footer -->
+    </section>
+
+    <!-- Team -->
+
+    <section id="team">
+        <div id="carouselControls" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <h3>It was a great learning experience working on the user interface.</h3>
+                    <img class="testimonial-image" src="static/image/p.jpg" alt="Lotus-profile">
+                    <em>Jamyang Lotus, Ladakh</em>
+                </div>
+
+                <div class="carousel-item">
+                    <h3>Developing Machine Learning model was challenging and fun.</h3>
+                    <img class="testimonial-image" src="static/image/p1.jpg" alt="Aquif-profile">
+                    <em>Aquif Reza Mir, Kashmir</em>
+                </div>
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselControls" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselControls" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+        </div>
+
+
+
+    </section>
+
+
+    <footer id="footer">
+        <i class="social-icon fa fa-envelope fa-size"></i>
+        <i class="social-icon fa fa-facebook-f fa-size"></i>
+        <i class="social-icon fa fa-instagram fa-size"></i>
+        <i class="social-icon fa fa-twitter fa-size"></i>
+        <i class="social-icon fa fa-linkedin fa-size"></i>
+        <p class="fa-size">© Copyright 2021 Lotus &#38; Aquif</p>
+
+    </footer>
+
+</body>
+
+</html>

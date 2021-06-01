@@ -1,0 +1,157 @@
+#title {
+    background-image: url("image/background.jpeg");
+    background-size: 100% auto;
+    background-position: center;
+    width: 100%;
+    color: #fff;
+    padding-bottom: 15%;
+}
+
+.ml-auto {
+    margin: auto 30px auto auto;
+    color: #fff;
+}
+
+body {
+    font-family: 'Inria Sans', sans-serif;
+}
+
+h2 {
+    font-family: 'Fira Sans', sans-serif;
+    font-weight: bold;
+    font-size: 2.5rem;
+    line-height: 2;
+}
+
+.big-font {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.alert {
+    margin-left: 35%;
+    width: 30%;
+    height: 15%;
+    font-size: 1.5rem;
+}
+
+.title-margin {
+    margin: 7% 15%;
+    text-align: center;
+    line-height: 2;
+}
+
+.title-text {
+    font-size: 1.5rem;
+    margin-bottom: 10%;
+}
+
+.input-group {
+    margin: auto;
+    width: 50%;
+}
+
+.progress {
+    margin: auto;
+    width: 50%;
+}
+
+.btn-outline-warning {
+    background: maroon;
+}
+
+
+/* Table section */
+
+#result {
+    margin-bottom: 7%;
+}
+
+.btn-space {
+    margin-right: 20px;
+}
+
+th,
+td {
+    font-size: 1.3rem;
+}
+
+th {
+    color: maroon;
+}
+
+.big-font-li {
+    font-size: 1.3rem;
+}
+
+.container-heading {
+    text-align: center;
+    margin-top: 3%;
+}
+
+.result-tb-margin {
+    margin-top: 5%;
+    margin-right: 3%;
+    text-align: center;
+    margin-left: 1%;
+}
+
+#ppt {
+    background-image: url("image/background.jpeg");
+    background-size: 100% auto;
+    background-position: center;
+    color: #fff;
+    text-align: center;
+    padding: 5%;
+}
+
+
+/* Team */
+
+#team {
+    background-image: url("image/background.jpeg");
+    background-size: 100% auto;
+    background-position: center;
+    color: #fff;
+    text-align: center;
+}
+
+.carousel-item {
+    padding: 7%;
+    text-align: center;
+}
+
+.testimonial-image {
+    width: 10%;
+    border-radius: 100%;
+    margin: 2%;
+    color: #fff;
+}
+
+
+/* footer section */
+
+#footer {
+    padding: 3% 15%;
+    text-align: center;
+}
+
+.social-icon {
+    margin: 20px 10px;
+    color: #ef8172;
+    margin-bottom: 1rem;
+}
+
+.social-icon:hover {
+    color: #ff4c68;
+}
+
+.fa-size {
+    font-size: 1.5rem;
+}
+
+@media screen and (max-width: 800px) {
+    .small-hide {
+        display: none;
+    }
+}
